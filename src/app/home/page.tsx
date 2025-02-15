@@ -369,23 +369,35 @@ export default function HomePage() {
             {/* Mobile Navigation */}
             <nav className="fixed bottom-0 left-0 right-0 bg-background border-t lg:hidden">
                 <div className="grid grid-cols-5 h-16">
-                    <Link href="/home" className="flex items-center justify-center text-primary">
-                        <Home className="h-6 w-6" />
+                    <Link href="/home" className="flex flex-col items-center justify-center text-primary hover:bg-accent transition-colors">
+                        <Home className="h-5 w-5" />
+                        <span className="text-xs">Home</span>
                     </Link>
-                    <Button variant="ghost" className="h-full rounded-none flex items-center justify-center">
-                        <Search className="h-6 w-6" />
-                    </Button>
-                    <Button variant="ghost" className="h-full rounded-none flex items-center justify-center">
-                        <PlusCircle className="h-6 w-6" />
-                    </Button>
-                    <Button variant="ghost" className="h-full rounded-none flex items-center justify-center">
-                        <Bell className="h-6 w-6" />
-                    </Button>
-                    <Link href="/profile" className="flex items-center justify-center">
-                        <Avatar className="h-8 w-8">
-                            <AvatarImage src="/api/placeholder/50/50" alt="Profile" />
-                            <AvatarFallback>U</AvatarFallback>
-                        </Avatar>
+
+                    <Link href="/search" className="flex flex-col items-center justify-center hover:bg-accent transition-colors">
+                        <Search className="h-5 w-5" />
+                        <span className="text-xs">Search</span>
+                    </Link>
+
+                    <Link href="#" className="flex flex-col items-center justify-center hover:bg-accent transition-colors">
+                        <PlusCircle className="h-5 w-5" />
+                        <span className="text-xs">Create</span>
+                    </Link>
+
+                    <Link href="/search-and-notif" className="flex flex-col items-center justify-center hover:bg-accent transition-colors relative">
+                        <Bell className="h-5 w-5" />
+                        <span className="text-xs">Notifications</span>
+                        <span className="absolute top-2 right-4 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
+                            3
+                        </span>
+                    </Link>
+
+                    <Link href="/message" className="flex flex-col items-center justify-center hover:bg-accent transition-colors relative">
+                        <MessageCircle className="h-5 w-5" />
+                        <span className="text-xs">Messages</span>
+                        <span className="absolute top-2 right-4 bg-primary text-white text-xs rounded-full px-1.5 py-0.5">
+                            2
+                        </span>
                     </Link>
                 </div>
             </nav>
