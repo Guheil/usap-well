@@ -281,11 +281,13 @@ export default function HomePage() {
                                     <CardContent className="px-4 pt-2">
                                         <p className="mb-3">{post.content}</p>
                                         {post.image && (
-                                            <div className="relative rounded-md overflow-hidden">
+                                            <div className="relative rounded-md overflow-hidden aspect-video">
                                                 <Image
                                                     src={post.image}
                                                     alt="Post attachment"
-                                                    className="w-full h-auto"
+                                                    fill
+                                                    className="object-cover"
+                                                    sizes="(max-width: 768px) 100vw, 700px"
                                                 />
                                             </div>
                                         )}

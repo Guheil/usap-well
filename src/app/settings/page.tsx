@@ -40,13 +40,22 @@ const SettingsPage = () => {
 
             <main className="container mx-auto px-4 py-6">
                 <Tabs defaultValue="account" className="space-y-6">
-                    <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
-                        <TabsTrigger value="account">Account</TabsTrigger>
-                        <TabsTrigger value="privacy">Privacy</TabsTrigger>
-                        <TabsTrigger value="notifications">Notifications</TabsTrigger>
-                        <TabsTrigger value="appearance">Appearance</TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-2 gap-2 lg:grid-cols-4">
+                        <TabsTrigger value="account" className="text-xs sm:text-sm">
+                            Account
+                        </TabsTrigger>
+                        <TabsTrigger value="privacy" className="text-xs sm:text-sm">
+                            Privacy
+                        </TabsTrigger>
+                        <TabsTrigger value="notifications" className="text-xs sm:text-sm">
+                            Notifications
+                        </TabsTrigger>
+                        <TabsTrigger value="appearance" className="text-xs sm:text-sm">
+                            Appearance
+                        </TabsTrigger>
                     </TabsList>
 
+                    {/* Account Settings */}
                     <TabsContent value="account">
                         <Card>
                             <CardHeader>
@@ -56,13 +65,18 @@ const SettingsPage = () => {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
-                                <div className="flex items-center gap-4">
+                                <div className="flex flex-col sm:flex-row items-center gap-4">
                                     <Avatar className="h-20 w-20">
-                                        <AvatarImage src="https://picsum.photos/200/300" alt="Profile" />
+                                        <AvatarImage
+                                            src="https://picsum.photos/200/300"
+                                            alt="Profile"
+                                            width={80}
+                                            height={80}
+                                        />
                                         <AvatarFallback>AJ</AvatarFallback>
                                     </Avatar>
-                                    <div className="space-y-2">
-                                        <Button>Change Avatar</Button>
+                                    <div className="space-y-2 text-center sm:text-left">
+                                        <Button className="w-full sm:w-auto">Change Avatar</Button>
                                         <p className="text-sm text-muted-foreground">
                                             JPG, GIF or PNG. Max size 2MB.
                                         </p>
@@ -78,12 +92,15 @@ const SettingsPage = () => {
                                         <Label>Email</Label>
                                         <p className="text-sm text-muted-foreground">alex.johnson@example.com</p>
                                     </div>
-                                    <Button variant="outline">Update Email</Button>
+                                    <Button variant="outline" className="w-full sm:w-auto">
+                                        Update Email
+                                    </Button>
                                 </div>
                             </CardContent>
                         </Card>
                     </TabsContent>
 
+                    {/* Privacy Settings */}
                     <TabsContent value="privacy">
                         <Card>
                             <CardHeader>
@@ -93,7 +110,7 @@ const SettingsPage = () => {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                     <div className="space-y-1">
                                         <Label>Private Account</Label>
                                         <p className="text-sm text-muted-foreground">
@@ -103,7 +120,7 @@ const SettingsPage = () => {
                                     <Switch />
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                     <div className="space-y-1">
                                         <Label>Two-Factor Authentication</Label>
                                         <p className="text-sm text-muted-foreground">
@@ -116,6 +133,7 @@ const SettingsPage = () => {
                         </Card>
                     </TabsContent>
 
+                    {/* Notification Settings */}
                     <TabsContent value="notifications">
                         <Card>
                             <CardHeader>
@@ -125,7 +143,7 @@ const SettingsPage = () => {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                     <div className="space-y-1">
                                         <Label>Push Notifications</Label>
                                         <p className="text-sm text-muted-foreground">
@@ -135,7 +153,7 @@ const SettingsPage = () => {
                                     <Switch />
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                     <div className="space-y-1">
                                         <Label>Email Notifications</Label>
                                         <p className="text-sm text-muted-foreground">
@@ -148,6 +166,7 @@ const SettingsPage = () => {
                         </Card>
                     </TabsContent>
 
+                    {/* Appearance Settings */}
                     <TabsContent value="appearance">
                         <Card>
                             <CardHeader>
@@ -157,7 +176,7 @@ const SettingsPage = () => {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                     <div className="space-y-1">
                                         <Label>Dark Mode</Label>
                                         <p className="text-sm text-muted-foreground">
@@ -167,7 +186,7 @@ const SettingsPage = () => {
                                     <Switch />
                                 </div>
                                 <Separator />
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                     <div className="space-y-1">
                                         <Label>Compact View</Label>
                                         <p className="text-sm text-muted-foreground">

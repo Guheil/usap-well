@@ -62,10 +62,7 @@ export default function ProfilePage() {
     return (
         <div className="min-h-screen bg-background pb-16 lg:pb-0">
             {/* Header */}
-            
-            
             <header className="bg-card sticky top-0 z-10 border-b">
-                
                 <div className="container mx-auto px-4">
                     <div className="flex h-16 items-center gap-4">
                         <Button
@@ -76,12 +73,6 @@ export default function ProfilePage() {
                         >
                             <ArrowLeft className="h-5 w-5" />
                         </Button>
-                        <Link href="/home" className="lg:hidden">
-                        
-                            <Button variant="ghost" size="icon">
-                                <ArrowLeft className="h-5 w-5" />
-                            </Button>
-                        </Link>
                         <div className="flex flex-col">
                             <h1 className="text-lg font-semibold">{userData.name}</h1>
                             <p className="text-sm text-muted-foreground">
@@ -98,7 +89,9 @@ export default function ProfilePage() {
                     <Image
                         src={userData.coverImage}
                         alt="Cover"
-                        className="h-full w-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 800px"
                     />
                 </div>
 
@@ -108,7 +101,12 @@ export default function ProfilePage() {
                         {/* Avatar */}
                         <div className="absolute -top-20 left-4 flex items-end gap-4">
                             <Avatar className="h-32 w-32 border-4 border-background">
-                                <AvatarImage src={userData.avatar} alt={userData.name} />
+                                <AvatarImage
+                                    src={userData.avatar}
+                                    alt={userData.name}
+                                    width={128}
+                                    height={128}
+                                />
                                 <AvatarFallback>{userData.name[0]}</AvatarFallback>
                             </Avatar>
                         </div>
@@ -211,7 +209,12 @@ export default function ProfilePage() {
                                             <CardHeader className="flex flex-row items-start justify-between space-y-0 p-4">
                                                 <div className="flex items-start gap-3">
                                                     <Avatar>
-                                                        <AvatarImage src={userData.avatar} alt={userData.name} />
+                                                        <AvatarImage
+                                                            src={userData.avatar}
+                                                            alt={userData.name}
+                                                            width={40}
+                                                            height={40}
+                                                        />
                                                         <AvatarFallback>{userData.name[0]}</AvatarFallback>
                                                     </Avatar>
                                                     <div>
@@ -234,11 +237,15 @@ export default function ProfilePage() {
                                             </CardHeader>
                                             {post.image && (
                                                 <CardContent className="p-0">
-                                                    <Image
-                                                        src={post.image}
-                                                        alt="Post attachment"
-                                                        className="w-full"
-                                                    />
+                                                    <div className="relative aspect-video">
+                                                        <Image
+                                                            src={post.image}
+                                                            alt="Post attachment"
+                                                            fill
+                                                            className="object-cover"
+                                                            sizes="(max-width: 768px) 100vw, 700px"
+                                                        />
+                                                    </div>
                                                 </CardContent>
                                             )}
                                         </Card>
