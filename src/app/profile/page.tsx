@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
     ArrowLeft,
     Calendar,
@@ -23,7 +24,6 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// Mock user data
 const userData = {
     name: "Alex Johnson",
     username: "alexjohnson",
@@ -57,13 +57,26 @@ const userData = {
 };
 
 export default function ProfilePage() {
+    const router = useRouter();
     return (
         <div className="min-h-screen bg-background pb-16 lg:pb-0">
             {/* Header */}
+            
+            
             <header className="bg-card sticky top-0 z-10 border-b">
+                
                 <div className="container mx-auto px-4">
                     <div className="flex h-16 items-center gap-4">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => router.push('/home')}
+                            className="mr-2"
+                        >
+                            <ArrowLeft className="h-5 w-5" />
+                        </Button>
                         <Link href="/home" className="lg:hidden">
+                        
                             <Button variant="ghost" size="icon">
                                 <ArrowLeft className="h-5 w-5" />
                             </Button>
