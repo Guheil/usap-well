@@ -45,10 +45,10 @@ const posts = [
         user: {
             name: "Alex Johnson",
             username: "alexj",
-            avatar: "/api/placeholder/50/50"
+            avatar: "https://picsum.photos/900/800"
         },
         content: "Just finished building my new portfolio website using Next.js and Tailwind CSS. Check it out!",
-        image: "/api/placeholder/600/400",
+        image: "https://picsum.photos/700/600",
         timestamp: "2h ago",
         likes: 24,
         comments: 3,
@@ -59,10 +59,10 @@ const posts = [
         user: {
             name: "Sam Rivera",
             username: "samr",
-            avatar: "/api/placeholder/50/50"
+            avatar: "https://picsum.photos/700/200"
         },
         content: "Beautiful day for hiking! 🏔️ #nature #outdoors",
-        image: "/api/placeholder/600/400",
+        image: "https://picsum.photos/700/700",
         timestamp: "4h ago",
         likes: 56,
         comments: 8,
@@ -73,7 +73,7 @@ const posts = [
         user: {
             name: "Jordan Lee",
             username: "jlee",
-            avatar: "/api/placeholder/50/50"
+            avatar: "https://picsum.photos/700/500"
         },
         content: "Working on a new project using React and TypeScript. Loving the type safety!",
         timestamp: "6h ago",

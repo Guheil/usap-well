@@ -28,7 +28,7 @@ const userData = {
     name: "Alex Johnson",
     username: "alexjohnson",
     avatar: "https://picsum.photos/200/300",
-    coverImage: "https://picsum.photos/600/300",
+    coverImage: "https://picsum.photos/800/200",
     bio: "Full-stack developer | Open source contributor | Building things with React, Node.js, and TypeScript",
     location: "San Francisco, CA",
     website: "https://github.com",
