@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
+import NotificationPopup from "@/components/ui/notification-popup";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -33,12 +34,13 @@ import {
 import {
     Sheet,
     SheetContent,
+    SheetTitle,
     SheetTrigger
 } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import SearchBar from "@/components/ui/search-bar";
 
-// Mock data for posts
 const posts = [
     {
         id: 1,
@@ -114,6 +116,7 @@ export default function HomePage() {
                     <div className="flex justify-between h-16 items-center">
                         <div className="flex items-center gap-2">
                             <Sheet>
+                                <SheetTitle></SheetTitle>
                                 <SheetTrigger asChild>
                                     <Button variant="ghost" size="icon" className="md:hidden">
                                         <Menu className="h-5 w-5" />
@@ -145,21 +148,21 @@ export default function HomePage() {
                             </Link>
                         </div>
 
+                       
+
                         <nav className="hidden md:flex items-center space-x-4">
                             <Link href="/home">
                                 <Button variant="ghost" size="icon" className="text-primary">
                                     <Home className="h-5 w-5" />
                                 </Button>
                             </Link>
-                            <Button variant="ghost" size="icon">
-                                <Search className="h-5 w-5" />
-                            </Button>
-                            <Button variant="ghost" size="icon">
-                                <Bell className="h-5 w-5" />
-                            </Button>
-                            <Button variant="ghost" size="icon">
-                                <MessageCircle className="h-5 w-5" />
-                            </Button>
+                            <SearchBar />
+                            <NotificationPopup />
+                            <Link href="/message">
+                                <Button variant="ghost" size="icon">
+                                    <MessageCircle className="h-5 w-5" />
+                                </Button>
+                            </Link>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" size="icon">
