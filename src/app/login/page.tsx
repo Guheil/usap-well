@@ -82,7 +82,7 @@ export default function LoginPage() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       setErrors({ form: "Invalid credentials. Try the dummy account: test@example.com / password123" });
 
-    } catch (error) {
+    } catch { 
       setErrors({ form: "Login failed. Please try again." });
     } finally {
       setIsLoading(false);
@@ -214,7 +214,7 @@ export default function LoginPage() {
             </CardContent>
             <CardFooter className="flex flex-col space-y-4">
               <div className="text-sm text-center text-muted-foreground">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "} {}
                 <a
                   className="underline text-primary hover:text-primary/90"
                   href="#"

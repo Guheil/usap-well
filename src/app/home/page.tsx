@@ -19,7 +19,7 @@ import {
     MoreHorizontal,
     Menu
 } from "lucide-react";
-
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -282,7 +282,7 @@ export default function HomePage() {
                                         <p className="mb-3">{post.content}</p>
                                         {post.image && (
                                             <div className="relative rounded-md overflow-hidden">
-                                                <img
+                                                <Image
                                                     src={post.image}
                                                     alt="Post attachment"
                                                     className="w-full h-auto"

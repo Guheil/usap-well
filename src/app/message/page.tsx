@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, ChevronLeft, Search, Circle, Phone, Video, MoreVertical, Paperclip, Image as ImageIcon, Smile, Link } from "lucide-react";
+import { Send, ChevronLeft, Search, Circle, Phone, Video, MoreVertical, Paperclip, Image as ImageIcon, Smile } from "lucide-react";
 import { format } from "date-fns";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
@@ -41,7 +41,7 @@ export default function Messenger() {
     const [selectedChat, setSelectedChat] = useState<number | null>(null);
     const [messageInput, setMessageInput] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
-    const [conversations, setConversations] = useState<Conversation[]>([
+    const [conversations] = useState<Conversation[]>([
         {
             id: 1,
             name: "John Doe",
@@ -237,7 +237,7 @@ export default function Messenger() {
                         {/* Messages Area */}
                         <ScrollArea className="flex-1 p-4">
                             <div className="space-y-4">
-                                {messages.map((message, index) => (
+                                {messages.map((message) => (
                                     <div
                                         key={message.id}
                                         className={`flex ${message.sender === 0 ? "justify-end" : "justify-start"}`}

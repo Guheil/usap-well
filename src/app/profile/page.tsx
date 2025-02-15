@@ -23,6 +23,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 const userData = {
     name: "Alex Johnson",
@@ -94,7 +95,7 @@ export default function ProfilePage() {
             <main>
                 {/* Cover Image */}
                 <div className="relative h-48 lg:h-64 w-full bg-muted">
-                    <img
+                    <Image
                         src={userData.coverImage}
                         alt="Cover"
                         className="h-full w-full object-cover"
@@ -233,7 +234,7 @@ export default function ProfilePage() {
                                             </CardHeader>
                                             {post.image && (
                                                 <CardContent className="p-0">
-                                                    <img
+                                                    <Image
                                                         src={post.image}
                                                         alt="Post attachment"
                                                         className="w-full"
