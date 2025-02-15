@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 const SearchNotificationsMessages = () => {
     const router = useRouter();
@@ -203,11 +204,13 @@ const SearchNotificationsMessages = () => {
                         </div>
 
                         {activeTab === "messages" && (
+                            <Link href="/message">
                             <Button
                                 className="fixed bottom-20 right-4 h-14 w-14 rounded-full shadow-lg"
                             >
                                 <MessageCircle className="h-6 w-6" />
                             </Button>
+                            </Link>
                         )}
                     </TabsContent>
                 </Tabs>

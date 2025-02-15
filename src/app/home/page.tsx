@@ -4,7 +4,6 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-    Bell,
     Home,
     MessageCircle,
     Search,
@@ -17,7 +16,8 @@ import {
     Repeat2,
     Share2,
     MoreHorizontal,
-    Menu
+    Menu,
+    Settings2Icon
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -385,8 +385,8 @@ export default function HomePage() {
                     </Link>
 
                     <Link href="/search-and-notif" className="flex flex-col items-center justify-center hover:bg-accent transition-colors relative">
-                        <Bell className="h-5 w-5" />
-                        <span className="text-xs">Notifications</span>
+                        <Settings2Icon className="h-5 w-5" />
+                        <span className="text-xs">Control</span>
                         <span className="absolute top-2 right-4 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
                             3
                         </span>
