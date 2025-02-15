@@ -3,6 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { PostCard } from "@/components/ui/post-card";
+import { CreatePost } from "@/components/ui/create-post";
+import { useState } from "react";
 import {
     Home,
     MessageCircle,
@@ -11,19 +14,12 @@ import {
     Settings,
     LogOut,
     PlusCircle,
-    Heart,
-    MessageSquare,
-    Repeat2,
-    Share2,
-    MoreHorizontal,
     Menu,
     Settings2Icon
 } from "lucide-react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader} from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Textarea } from "@/components/ui/textarea";
 import NotificationPopup from "@/components/ui/notification-popup";
 import {
     DropdownMenu,
@@ -40,7 +36,22 @@ import {
 import { Separator } from "@/components/ui/separator";
 import SearchBar from "@/components/ui/search-bar";
 
-const posts = [
+interface Post {
+    id: number;
+    user: {
+        name: string;
+        username: string;
+        avatar: string;
+    };
+    content: string;
+    image?: string;
+    timestamp: string;
+    likes: number;
+    comments: number;
+    shares: number;
+}
+
+const initialPosts = [
     {
         id: 1,
         user: {
@@ -81,6 +92,20 @@ const posts = [
         likes: 18,
         comments: 4,
         shares: 1
+    },
+    {
+        id: 4,
+        user: {
+            name: "Biancakes",
+            username: "celebiii",
+            avatar: "https://picsum.photos/800/500"
+        },
+        image: "https://picsum.photos/900/700",
+        content: "WHERES MAH BF AT?",
+        timestamp: "6h ago",
+        likes: 128,
+        comments: 12,
+        shares: 6
     }
 ];
 
@@ -101,12 +126,29 @@ const trendingTopics = [
 
 export default function HomePage() {
     const router = useRouter();
-
+    const [posts, setPosts] = useState<Post[]>(initialPosts);
     const handleLogout = () => {
         console.log("Logging out...");
         router.push("/login");
     };
+    const handleCreatePost = (content: string, imageFile?: File) => {
+        const newPost: Post = {
+            id: Date.now(),
+            user: {
+                name: "Current User",
+                username: "currentuser",
+                avatar: "/api/placeholder/40/40"
+            },
+            content,
+            image: imageFile ? URL.createObjectURL(imageFile) : undefined,
+            timestamp: "Just now",
+            likes: 0,
+            comments: 0,
+            shares: 0
+        };
 
+        setPosts(prev => [newPost, ...prev]);
+    };
     return (
         <div className="min-h-screen bg-background pb-16 lg:pb-0">
             {/* Header/Navigation */}
@@ -221,8 +263,9 @@ export default function HomePage() {
 
                     {/* Main Feed */}
                     <div className="lg:col-span-6">
+                        <CreatePost onCreatePost={handleCreatePost} />
                         {/* Create Post */}
-                        <Card className="mb-6">
+                        {/* <Card className="mb-6">
                             <CardContent className="p-4">
                                 <div className="flex items-start space-x-3">
                                     <Avatar>
@@ -243,76 +286,12 @@ export default function HomePage() {
                                     </div>
                                 </div>
                             </CardContent>
-                        </Card>
+                        </Card> */}
 
                         {/* Posts Feed */}
                         <div className="space-y-6">
                             {posts.map(post => (
-                                <Card key={post.id}>
-                                    <CardHeader className="px-4 pt-4 pb-0">
-                                        <div className="flex items-start justify-between">
-                                            <div className="flex items-center space-x-3">
-                                                <Avatar>
-                                                    <AvatarImage src={post.user.avatar} alt={post.user.name} />
-                                                    <AvatarFallback>{post.user.name[0]}</AvatarFallback>
-                                                </Avatar>
-                                                <div>
-                                                    <p className="font-semibold">{post.user.name}</p>
-                                                    <p className="text-xs text-muted-foreground">
-                                                        @{post.user.username} · {post.timestamp}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="icon">
-                                                        <MoreHorizontal className="h-5 w-5" />
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem>Save</DropdownMenuItem>
-                                                    <DropdownMenuItem>Report</DropdownMenuItem>
-                                                    <DropdownMenuItem>Hide</DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        </div>
-                                    </CardHeader>
-
-                                    <CardContent className="px-4 pt-2">
-                                        <p className="mb-3">{post.content}</p>
-                                        {post.image && (
-                                            <div className="relative rounded-md overflow-hidden aspect-video">
-                                                <Image
-                                                    src={post.image}
-                                                    alt="Post attachment"
-                                                    fill
-                                                    className="object-cover"
-                                                    sizes="(max-width: 768px) 100vw, 700px"
-                                                />
-                                            </div>
-                                        )}
-                                    </CardContent>
-
-                                    <CardFooter className="px-4 pb-4 pt-0">
-                                        <div className="flex justify-between w-full">
-                                            <Button variant="ghost" size="sm" className="space-x-1">
-                                                <Heart className="h-4 w-4" />
-                                                <span>{post.likes}</span>
-                                            </Button>
-                                            <Button variant="ghost" size="sm" className="space-x-1">
-                                                <MessageSquare className="h-4 w-4" />
-                                                <span>{post.comments}</span>
-                                            </Button>
-                                            <Button variant="ghost" size="sm" className="space-x-1">
-                                                <Repeat2 className="h-4 w-4" />
-                                                <span>{post.shares}</span>
-                                            </Button>
-                                            <Button variant="ghost" size="sm">
-                                                <Share2 className="h-4 w-4" />
-                                            </Button>
-                                        </div>
-                                    </CardFooter>
-                                </Card>
+                                <PostCard key={post.id} post={post} />
                             ))}
                         </div>
                     </div>
