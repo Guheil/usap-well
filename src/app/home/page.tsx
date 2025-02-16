@@ -27,20 +27,20 @@ import SearchBar from "@/components/ui/search-bar";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-interface Post {
-    id: number;
-    user: {
-        name: string;
-        username: string;
-        avatar: string;
-    };
-    content: string;
-    image?: string;
-    timestamp: string;
-    likes: number;
-    comments: number;
-    shares: number;
-}
+// interface Post {
+//     id: number;
+//     user: {
+//         name: string;
+//         username: string;
+//         avatar: string;
+//     };
+//     content: string;
+//     image?: string;
+//     timestamp: string;
+//     likes: number;
+//     comments: number;
+//     shares: number;
+// }
 
 const initialPosts = [
     {
@@ -415,7 +415,7 @@ export default function HomePage() {
                                 <CardContent>
                                     <div className="space-y-4">
                                         <div className="text-sm text-zinc-500">
-                                            You haven't saved any posts yet. Save posts to read them later.
+                                            You have not saved any posts yet. Save posts to read them later.
                                         </div>
                                         <Button variant="outline" className="w-full">
                                             Browse Popular Posts
