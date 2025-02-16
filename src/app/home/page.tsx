@@ -156,10 +156,11 @@ export default function HomePage() {
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pb-16 lg:pb-0">
             {/* Header */}
+            {/* Main Header */}
             <header className="bg-white dark:bg-zinc-900 sticky top-0 z-10 border-b border-zinc-200 dark:border-zinc-800">
                 <div className="container mx-auto px-4">
-                    <div className="flex justify-between h-16 items-center">
-                        <div className="flex items-center gap-4">
+                    <div className="flex h-16 items-center">
+                        <div className="w-96 md:w-64 flex items-center gap-4">
                             <Sheet>
                                 <SheetTrigger asChild>
                                     <Button variant="ghost" size="icon" className="md:hidden">
@@ -196,68 +197,87 @@ export default function HomePage() {
                                 Gael<span className="text-primary">.</span>
                             </Link>
                         </div>
-                        
-                        <nav className="hidden md:flex items-center space-x-6">
-                            <SearchBar />
-                            <Link href="/home">
-                                <Button variant="ghost" size="icon" className="text-zinc-700 dark:text-zinc-300">
-                                    <Home className="h-5 w-5" />
-                                </Button>
-                            </Link>
-                            
-                            <NotificationPopup />
-                            <Link href="/message">
-                                <Button variant="ghost" size="icon" className="relative">
-                                    <MessageCircle className="h-5 w-5" />
-                                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-primary rounded-full text-[10px] text-white flex items-center justify-center">
-                                        2
-                                    </span>
-                                </Button>
-                            </Link>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="relative">
-                                        <Avatar className="h-8 w-8">
-                                            <AvatarImage src="/api/placeholder/32/32" />
-                                            <AvatarFallback>U</AvatarFallback>
-                                        </Avatar>
+
+                        {/* Desktop Search - hidden on mobile */}
+                        <div className="hidden md:block flex-1">
+                            <div className="max-w-lg mx-auto">
+                                <SearchBar />
+                            </div>
+                        </div>
+
+                        {/* Right section with fixed width */}
+                        <div className="w-64 md:w-48 flex justify-end">
+                            <nav className="flex items-center space-x-3">
+                                <Link href="/home" className="hidden md:block">
+                                    <Button variant="ghost" size="icon" className="text-zinc-700 dark:text-zinc-300">
+                                        <Home className="h-5 w-5" />
                                     </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-56">
-                                    <div className="flex items-center space-x-2 p-2">
-                                        <Avatar className="h-8 w-8">
-                                            <AvatarImage src="/api/placeholder/32/32" />
-                                            <AvatarFallback>U</AvatarFallback>
-                                        </Avatar>
-                                        <div className="flex flex-col">
-                                            <span className="text-sm font-medium">Current User</span>
-                                            <span className="text-xs text-zinc-500">@currentuser</span>
+                                </Link>
+
+                                <NotificationPopup />
+                                <Link href="/message">
+                                    <Button variant="ghost" size="icon" className="relative">
+                                        <MessageCircle className="h-5 w-5" />
+                                        <span className="absolute -top-1 -right-1 h-4 w-4 bg-primary rounded-full text-[10px] text-white flex items-center justify-center">
+                                            2
+                                        </span>
+                                    </Button>
+                                </Link>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="relative">
+                                            <Avatar className="h-8 w-8">
+                                                <AvatarImage src="/api/placeholder/32/32" />
+                                                <AvatarFallback>U</AvatarFallback>
+                                            </Avatar>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="w-56">
+                                        <div className="flex items-center space-x-2 p-2">
+                                            <Avatar className="h-8 w-8">
+                                                <AvatarImage src="/api/placeholder/32/32" />
+                                                <AvatarFallback>U</AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-medium">Current User</span>
+                                                <span className="text-xs text-zinc-500">@currentuser</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/profile" className="flex items-center">
-                                            <User className="mr-2 h-4 w-4" />
-                                            <span>Profile</span>
-                                        </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/settings" className="flex items-center">
-                                            <Settings className="mr-2 h-4 w-4" />
-                                            <span>Settings</span>
-                                        </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={handleLogout} className="text-red-500">
-                                        <LogOut className="mr-2 h-4 w-4" />
-                                        <span>Logout</span>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </nav>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/profile" className="flex items-center">
+                                                <User className="mr-2 h-4 w-4" />
+                                                <span>Profile</span>
+                                            </Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/settings" className="flex items-center">
+                                                <Settings className="mr-2 h-4 w-4" />
+                                                <span>Settings</span>
+                                            </Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem onClick={handleLogout} className="text-red-500">
+                                            <LogOut className="mr-2 h-4 w-4" />
+                                            <span>Logout</span>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </nav>
+                        </div>
                     </div>
                 </div>
             </header>
+
+            {/* Mobile Search Container */}
+            <div className="md:hidden bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 flex justify-center">
+                <div className="container mx-auto px-4 py-2 flex justify-center">
+                    <div className="max-w-lg w-full">
+                        <SearchBar />
+                    </div>
+                </div>
+            </div>
+
 
             {/* Main Content */}
             <main className="container mx-auto px-4 py-6">
