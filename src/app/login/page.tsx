@@ -2,12 +2,29 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { GalleryVerticalEnd, Loader2, KeyRound, Mail } from "lucide-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  GalleryVerticalEnd,
+  Loader2,
+  KeyRound,
+  Mail,
+  Github,
+  Chrome,
+  AlertCircle
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import backgroundImage from "@/app/public/assets/img/endless-constellation.svg";
 
@@ -25,6 +42,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<FormErrors>({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateEmail = (email: string): boolean => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -100,45 +118,76 @@ export default function LoginPage() {
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       <div className="relative hidden lg:block">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-600 to-indigo-600" />
+        <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-zinc-800" />
         <Image
           src={backgroundImage}
           alt="Login background"
-          layout="fill" 
-          objectFit="cover" 
-          className="absolute inset-0 mix-blend-overlay" 
-          priority 
+          layout="fill"
+          objectFit="cover"
+          className="absolute inset-0 mix-blend-overlay opacity-20"
+          priority
         />
         <div className="absolute inset-0 flex items-center justify-center p-8">
-          <div className="max-w-md text-white">
-            <h1 className="mb-4 text-4xl font-bold">Welcome to Gael</h1>
-            <p className="text-lg opacity-90">Experience seamless collaboration and productivity with our modern platform.</p>
+          <div className="max-w-md text-white space-y-6">
+            <Badge variant="outline" className="px-4 py-1 text-sm border-zinc-700 text-zinc-300">
+              Welcome Back
+            </Badge>
+            <h1 className="text-5xl font-bold tracking-tight">Gael Platform</h1>
+            <p className="text-lg text-zinc-400 leading-relaxed">
+              Experience seamless collaboration and productivity with our modern platform.
+              Join thousands of teams already using Gael.
+            </p>
+            <div className="flex gap-4 pt-4">
+              <div className="text-center">
+                <div className="text-3xl font-bold">10k+</div>
+                <div className="text-sm text-zinc-400">Active Users</div>
+              </div>
+              <Separator orientation="vertical" className="h-16 bg-zinc-700" />
+              <div className="text-center">
+                <div className="text-3xl font-bold">95%</div>
+                <div className="text-sm text-zinc-400">Satisfaction</div>
+              </div>
+              <Separator orientation="vertical" className="h-16 bg-zinc-700" />
+              <div className="text-center">
+                <div className="text-3xl font-bold">24/7</div>
+                <div className="text-sm text-zinc-400">Support</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col justify-center p-8">
+      <div className="flex flex-col justify-center p-8 bg-zinc-50">
         <div className="mx-auto w-full max-w-md space-y-8">
           <div className="flex items-center justify-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
-              <GalleryVerticalEnd className="size-6 text-primary-foreground" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-900">
+              <GalleryVerticalEnd className="size-6 text-white" />
             </div>
-            <h2 className="text-2xl font-bold">Gael.</h2>
+            <h2 className="text-3xl font-bold text-zinc-900">Gael.</h2>
           </div>
 
-          <Card>
-            <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl text-center">Sign in</CardTitle>
-              <CardDescription className="text-center">
-                Enter your email and password to access your account
+          <Card className="border-0 shadow-lg">
+            <CardHeader className="space-y-2 pb-6">
+              <CardTitle className="text-2xl font-bold text-center">Welcome back</CardTitle>
+              <CardDescription className="text-center text-zinc-600">
+                Enter your credentials to access your account
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-6">
+              {errors.form && (
+                <Alert variant="destructive" className="text-sm">
+                  <AlertCircle className="size-4" />
+                  <AlertDescription>{errors.form}</AlertDescription>
+                </Alert>
+              )}
+
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email" className="text-sm font-medium text-zinc-700">
+                    Email address
+                  </Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-3 size-4 text-muted-foreground" />
+                    <Mail className="absolute left-3 top-3 size-4 text-zinc-500" />
                     <Input
                       id="email"
                       placeholder="name@example.com"
@@ -146,39 +195,55 @@ export default function LoginPage() {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className={`pl-10 ${errors.email ? "border-red-500" : ""}`}
+                      className={`pl-10 h-12 border-zinc-200 focus:border-zinc-400 focus:ring-zinc-400 ${errors.email ? "border-red-500" : ""
+                        }`}
                       disabled={isLoading}
                     />
                   </div>
                   {errors.email && (
-                    <p className="text-xs text-red-500">{errors.email}</p>
+                    <p className="text-xs text-red-500 mt-1">{errors.email}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                  <div className="flex justify-between">
+                    <Label htmlFor="password" className="text-sm font-medium text-zinc-700">
+                      Password
+                    </Label>
+                    <a href="#" className="text-sm text-zinc-600 hover:text-zinc-900">
+                      Forgot password?
+                    </a>
+                  </div>
                   <div className="relative">
-                    <KeyRound className="absolute left-3 top-3 size-4 text-muted-foreground" />
+                    <KeyRound className="absolute left-3 top-3 size-4 text-zinc-500" />
                     <Input
                       id="password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
-                      className={`pl-10 ${errors.password ? "border-red-500" : ""}`}
+                      className={`pl-10 h-12 border-zinc-200 focus:border-zinc-400 focus:ring-zinc-400 ${errors.password ? "border-red-500" : ""
+                        }`}
                       disabled={isLoading}
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-3 text-zinc-500 hover:text-zinc-700"
+                    >
+                      {showPassword ? "Hide" : "Show"}
+                    </button>
                   </div>
                   {errors.password && (
-                    <p className="text-xs text-red-500">{errors.password}</p>
+                    <p className="text-xs text-red-500 mt-1">{errors.password}</p>
                   )}
                 </div>
 
-                {errors.form && (
-                  <p className="text-sm text-red-500 text-center">{errors.form}</p>
-                )}
-
-                <Button className="w-full" type="submit" disabled={isLoading}>
+                <Button
+                  className="w-full h-12 bg-zinc-900 hover:bg-zinc-800 text-white"
+                  type="submit"
+                  disabled={isLoading}
+                >
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 size-4 animate-spin" />
@@ -190,33 +255,42 @@ export default function LoginPage() {
                 </Button>
               </form>
 
-              <div className="mt-4">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <Separator />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">
-                      Or continue with
-                    </span>
-                  </div>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator className="w-full border-zinc-200" />
                 </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white px-2 text-zinc-500">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
 
-                <Button
-                  variant="outline"
-                  onClick={fillDummyAccount}
-                  className="mt-4 w-full"
-                  disabled={isLoading}
-                >
-                  Use Demo Account
+              <div className="grid grid-cols-2 gap-4">
+                <Button variant="outline" className="h-12 border-zinc-200 hover:bg-zinc-50">
+                  <Github className="mr-2 size-4" />
+                  GitHub
+                </Button>
+                <Button variant="outline" className="h-12 border-zinc-200 hover:bg-zinc-50">
+                  <Chrome className="mr-2 size-4" />
+                  Google
                 </Button>
               </div>
+
+              <Button
+                variant="outline"
+                onClick={fillDummyAccount}
+                className="w-full h-12 border-zinc-200 hover:bg-zinc-50"
+                disabled={isLoading}
+              >
+                Use Demo Account
+              </Button>
             </CardContent>
-            <CardFooter className="flex flex-col space-y-4">
-              <div className="text-sm text-center text-muted-foreground">
-                Don&apos;t have an account?{" "} {}
+            <CardFooter className="flex flex-col space-y-4 border-t border-zinc-100 bg-zinc-50/50">
+              <div className="text-sm text-center text-zinc-600">
+                Don&apos;t have an account?{" "}
                 <a
-                  className="underline text-primary hover:text-primary/90"
+                  className="font-medium text-zinc-900 hover:underline"
                   href="#"
                 >
                   Create one now
