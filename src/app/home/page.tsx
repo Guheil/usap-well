@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PostCard } from "@/components/ui/post-card";
 import { CreatePost } from "@/components/ui/create-post";
-import { useState } from "react";
 import {
     Home, MessageCircle, Search, User, Settings, LogOut, PlusCircle,
     Menu, Settings2Icon, TrendingUp, Bookmark, Users, Calendar,
@@ -26,22 +25,6 @@ import { Separator } from "@/components/ui/separator";
 import SearchBar from "@/components/ui/search-bar";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-// interface Post {
-//     id: number;
-//     user: {
-//         name: string;
-//         username: string;
-//         avatar: string;
-//     };
-//     content: string;
-//     image?: string;
-//     timestamp: string;
-//     likes: number;
-//     comments: number;
-//     shares: number;
-// }
-
 const initialPosts = [
     {
         id: 1,

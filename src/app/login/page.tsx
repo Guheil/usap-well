@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from '@/lib/supabase';
 import {
   GalleryVerticalEnd,
   Loader2,
@@ -27,6 +28,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import backgroundImage from "@/app/public/assets/img/endless-constellation.svg";
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 const DUMMY_EMAIL = "test@example.com";
 const DUMMY_PASSWORD = "password123";
@@ -38,6 +40,7 @@ interface FormErrors {
 }
 
 export default function LoginPage() {
+  const supabase = createClientComponentClient();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -91,21 +94,74 @@ export default function LoginPage() {
     }
 
     try {
-      if (formData.email === DUMMY_EMAIL && formData.password === DUMMY_PASSWORD) {
-        await new Promise(resolve => setTimeout(resolve, 800));
-        router.push("/home");
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (error) {
+        setErrors({ form: error.message });
         return;
       }
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setErrors({ form: "Invalid credentials. Try the dummy account: test@example.com / password123" });
-
-    } catch { 
+      if (data?.user) {
+        router.push("/home");
+      }
+    } catch (error) {
       setErrors({ form: "Login failed. Please try again." });
     } finally {
       setIsLoading(false);
     }
   };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      console.log('Starting Google OAuth with client component client...');
+
+      const supabase = createClientComponentClient();
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            prompt: 'select_account',
+            access_type: 'offline'
+          }
+        }
+      });
+
+      if (error) {
+        console.error('OAuth error:', error);
+        setErrors({ form: error.message || "Failed to sign in with Google" });
+        setIsLoading(false);
+      }
+
+      // The signInWithOAuth will automatically redirect the browser
+
+    } catch (error) {
+      console.error('Sign in error:', error);
+      setErrors({ form: "Failed to sign in with Google. Please try again." });
+      setIsLoading(false);
+    }
+  };
+
+  const handleGitHubSignIn = async () => {
+    try {
+      setIsLoading(true);
+      await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        }
+      });
+    } catch (error) {
+      setErrors({ form: "Failed to sign in with GitHub. Please try again." });
+      setIsLoading(false);
+    }
+  };
+
 
   const fillDummyAccount = () => {
     setFormData({
@@ -267,11 +323,19 @@ export default function LoginPage() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <Button variant="outline" className="h-12 border-zinc-200 hover:bg-zinc-50">
+                <Button
+                  variant="outline"
+                  className="h-12 border-zinc-200 hover:bg-zinc-50"
+                  onClick={handleGitHubSignIn}
+                >
                   <Github className="mr-2 size-4" />
                   GitHub
                 </Button>
-                <Button variant="outline" className="h-12 border-zinc-200 hover:bg-zinc-50">
+                <Button
+                  variant="outline"
+                  className="h-12 border-zinc-200 hover:bg-zinc-50"
+                  onClick={handleGoogleSignIn}
+                >
                   <Chrome className="mr-2 size-4" />
                   Google
                 </Button>
