@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from '@/lib/supabase';
+// import { supabase } from '@/lib/supabase';
 import {
   GalleryVerticalEnd,
   Loader2,
@@ -28,6 +28,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import backgroundImage from "@/app/public/assets/img/endless-constellation.svg";
+import rightBg from "@/app/public/assets/img/endless-constellation-bg.svg";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 const DUMMY_EMAIL = "test@example.com";
@@ -138,7 +139,6 @@ export default function LoginPage() {
         setIsLoading(false);
       }
 
-      // The signInWithOAuth will automatically redirect the browser
 
     } catch (error) {
       console.error('Sign in error:', error);
@@ -175,8 +175,8 @@ export default function LoginPage() {
     <div className="grid min-h-screen lg:grid-cols-2">
       <div className="relative hidden lg:block">
         <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-zinc-800" />
-        <Image
-          src={backgroundImage}
+           <Image
+          src={rightBg}
           alt="Login background"
           layout="fill"
           objectFit="cover"
@@ -214,6 +214,7 @@ export default function LoginPage() {
       </div>
 
       <div className="flex flex-col justify-center p-8 bg-zinc-50">
+     
         <div className="mx-auto w-full max-w-md space-y-8">
           <div className="flex items-center justify-center gap-2">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-900">
