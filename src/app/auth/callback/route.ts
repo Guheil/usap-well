@@ -13,9 +13,16 @@ export async function GET(request: Request) {
             return NextResponse.redirect(new URL("/login?error=Missing+code+parameter", request.url));
         }
 
-        // Create the Supabase client with await for the cookies
-        const cookieStore = cookies();
-        const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+        // Create a response first
+        const response = NextResponse.redirect(new URL("/home", request.url));
+
+        // Get cookie store and await it
+        const cookieStore = await cookies();
+
+        // Create the Supabase client with the awaited cookie store
+        const supabase = createRouteHandlerClient({
+            cookies: () => cookieStore
+        });
 
         // Exchange the code for a session
         const { error } = await supabase.auth.exchangeCodeForSession(code);
@@ -27,7 +34,8 @@ export async function GET(request: Request) {
             );
         }
 
-        return NextResponse.redirect(new URL("/home", request.url));
+        return response;
+
     } catch (error) {
         console.error('Callback handler error:', error);
         return NextResponse.redirect(

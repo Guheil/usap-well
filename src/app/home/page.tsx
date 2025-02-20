@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PostCard } from "@/components/ui/post-card";
@@ -25,6 +26,10 @@ import { Separator } from "@/components/ui/separator";
 import SearchBar from "@/components/ui/search-bar";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
 const initialPosts = [
     {
         id: 1,
@@ -113,9 +118,70 @@ export default function HomePage() {
     const router = useRouter();
     const [posts, setPosts] = useState(initialPosts);
 
+    const [currentUser, setCurrentUser] = useState({
+        name: "User",
+        username: "user",
+        avatar: "/api/placeholder/32/32"
+    });
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+
+                if (!session) {
+                    console.log("No active session found");
+                    router.push("/home");
+                    return;
+                }
+
+                const { data: profile, error } = await supabase
+                    .from('profiles')
+                    .select('full_name, email, avatar_url')
+                    .eq('id', session.user.id)
+                    .single();
+
+                if (error) {
+                    console.error("Error fetching profile:", error);
+                    return;
+                }
+
+                if (profile) {
+                    // Safely access email with fallback
+                    const email = session.user?.email || 'user@example.com';
+                    const username = email.split('@')[0];
+
+                    setCurrentUser({
+                        name: profile.full_name || username,
+                        username: username,
+                        avatar: profile.avatar_url || "/api/placeholder/32/32"
+                    });
+                }
+            } catch (error) {
+                console.error("Session error:", error);
+            }
+        };
+
+        fetchUserProfile();
+    }, []);
+
     const handleLogout = () => {
-        console.log("Logging out...");
-        router.push("/login");
+        try {
+            console.log("Logging out user...");
+
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("userData");
+
+            document.cookie.split(";").forEach(cookie => {
+                const [name] = cookie.trim().split("=");
+                document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+            });
+
+            router.push("/login");
+        } catch (error) {
+            console.error("Logout failed:", error);
+            router.push("/login");
+        }
     };
 
     const handleCreatePost = (content: string, imageFile?: File) => {
@@ -218,12 +284,12 @@ export default function HomePage() {
                                     <DropdownMenuContent align="end" className="w-56">
                                         <div className="flex items-center space-x-2 p-2">
                                             <Avatar className="h-8 w-8">
-                                                <AvatarImage src="/api/placeholder/32/32" />
-                                                <AvatarFallback>U</AvatarFallback>
+                                                <AvatarImage src={currentUser.avatar} />
+                                                <AvatarFallback>{currentUser.name ? currentUser.name[0].toUpperCase() : 'U'}</AvatarFallback>
                                             </Avatar>
                                             <div className="flex flex-col">
-                                                <span className="text-sm font-medium">Current User</span>
-                                                <span className="text-xs text-zinc-500">@currentuser</span>
+                                                <span className="text-sm font-medium">{currentUser.name}</span>
+                                                <span className="text-xs text-zinc-500">@{currentUser.username}</span>
                                             </div>
                                         </div>
                                         <DropdownMenuSeparator />

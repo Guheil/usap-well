@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-// import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import {
   GalleryVerticalEnd,
   Loader2,
@@ -47,6 +47,29 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    // Check for existing session on mount
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session) {
+        router.replace('/home');
+      }
+    });
+
+    // Set up session listener
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (session) {
+        router.replace('/home');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const validateEmail = (email: string): boolean => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -73,9 +96,10 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrors({});  // Clear previous errors
 
+    // Form validation
     const newErrors: FormErrors = {};
-
     if (!formData.email) {
       newErrors.email = "Email is required";
     } else if (!validateEmail(formData.email)) {
@@ -101,20 +125,42 @@ export default function LoginPage() {
       });
 
       if (error) {
-        setErrors({ form: error.message });
+        // Handle specific error cases
+        switch (error.message) {
+          case 'Invalid login credentials':
+            setErrors({ form: "Invalid email or password" });
+            break;
+          case 'Email not confirmed':
+            setErrors({ form: "Please verify your email address" });
+            break;
+          default:
+            setErrors({ form: error.message });
+        }
         return;
       }
 
-      if (data?.user) {
-        router.push("/home");
+      if (data?.session) {
+        // Explicitly store the session
+        await supabase.auth.setSession(data.session);
+
+        // Use replace instead of push to prevent going back to login
+        router.replace("/home");
+      } else {
+        // Handle the case where we have a user but no session
+        setErrors({ form: "Login successful but no session created. Please try again." });
       }
     } catch (error) {
-      setErrors({ form: "Login failed. Please try again." });
+      // Handle unexpected errors
+      console.error('Login error:', error);
+      setErrors({
+        form: error instanceof Error
+          ? error.message
+          : "An unexpected error occurred. Please try again."
+      });
     } finally {
       setIsLoading(false);
     }
   };
-
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
