@@ -11,7 +11,9 @@ import {
     Github,
     Chrome,
     AlertCircle,
-    Check
+    Check,
+    Briefcase,
+    Building
 } from "lucide-react";
 import {
     Card,
@@ -34,13 +36,17 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 const DUMMY_NAME = "John Doe";
 const DUMMY_EMAIL = "test@example.com";
-const DUMMY_PASSWORD = "password123";
+const DUMMY_PASSWORD = "Password123!";
+const DUMMY_COMPANY = "Acme Inc";
+const DUMMY_JOB_TITLE = "Product Manager";
 
 interface FormErrors {
     name?: string;
     email?: string;
     password?: string;
     confirmPassword?: string;
+    company?: string;
+    jobTitle?: string;
     form?: string;
 }
 
@@ -52,11 +58,14 @@ export default function RegisterPage() {
         name: "",
         email: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        company: "",
+        jobTitle: ""
     });
     const [errors, setErrors] = useState<FormErrors>({});
     const [showPassword, setShowPassword] = useState(false);
     const [passwordStrength, setPasswordStrength] = useState(0);
+    const [registrationComplete, setRegistrationComplete] = useState(false);
 
     const validateEmail = (email: string): boolean => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -64,7 +73,10 @@ export default function RegisterPage() {
     };
 
     const validatePassword = (password: string): boolean => {
-        return password.length >= 8;
+        return password.length >= 8 &&
+            /[A-Z]/.test(password) &&
+            /[0-9]/.test(password) &&
+            /[^a-zA-Z0-9]/.test(password);
     };
 
     const checkPasswordStrength = (password: string): number => {
@@ -112,7 +124,7 @@ export default function RegisterPage() {
         if (!formData.password) {
             newErrors.password = "Password is required";
         } else if (!validatePassword(formData.password)) {
-            newErrors.password = "Password must be at least 8 characters long";
+            newErrors.password = "Password does not meet all requirements";
         }
 
         if (formData.password !== formData.confirmPassword) {
@@ -126,28 +138,56 @@ export default function RegisterPage() {
         }
 
         try {
-            const { data, error } = await supabase.auth.signUp({
+            // 1. Sign up the user with Supabase Auth
+            const { data: authData, error: authError } = await supabase.auth.signUp({
                 email: formData.email,
                 password: formData.password,
                 options: {
                     data: {
                         full_name: formData.name,
-                    }
+                    },
+                    emailRedirectTo: `${window.location.origin}/auth/callback`
                 }
             });
 
-            if (error) {
-                setErrors({ form: error.message });
-                return;
+            if (authError) {
+                throw authError;
             }
 
-            if (data?.user) {
-                // Redirect to verification page or login
-                router.push("/verification");
+            if (!authData.user) {
+                throw new Error("Failed to create user account");
             }
-        } catch (error) {
-            setErrors({ form: "Registration failed. Please try again." });
-        } finally {
+
+            // 2. Update the profile with additional information
+            // Note: The basic profile is created by the database trigger,
+            // but we need to update with the additional fields
+            const { error: profileError } = await supabase
+                .from('profiles')
+                .update({
+                    full_name: formData.name,
+                    company: formData.company,
+                    job_title: formData.jobTitle
+                })
+                .eq('id', authData.user.id);
+
+            if (profileError) {
+                console.error("Error updating profile:", profileError);
+                // We won't throw here since the auth part worked
+            }
+
+            // Show success message and redirect
+            setRegistrationComplete(true);
+
+            // Wait 2 seconds then redirect to verification page
+            setTimeout(() => {
+                router.push("/verification");
+            }, 2000);
+
+        } catch (error: any) {
+            console.error("Registration error:", error);
+            setErrors({
+                form: error.message || "Registration failed. Please try again."
+            });
             setIsLoading(false);
         }
     };
@@ -201,11 +241,34 @@ export default function RegisterPage() {
             name: DUMMY_NAME,
             email: DUMMY_EMAIL,
             password: DUMMY_PASSWORD,
-            confirmPassword: DUMMY_PASSWORD
+            confirmPassword: DUMMY_PASSWORD,
+            company: DUMMY_COMPANY,
+            jobTitle: DUMMY_JOB_TITLE
         });
         setPasswordStrength(checkPasswordStrength(DUMMY_PASSWORD));
         setErrors({});
     };
+
+    if (registrationComplete) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-zinc-50 p-4">
+                <Card className="w-full max-w-md border-0 shadow-lg">
+                    <CardHeader className="space-y-2 text-center">
+                        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                            <Check className="size-6 text-green-600" />
+                        </div>
+                        <CardTitle className="text-2xl font-bold">Registration Successful</CardTitle>
+                        <CardDescription>
+                            Please check your email to verify your account. You will be redirected shortly.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="text-center">
+                        <Loader2 className="mx-auto size-6 animate-spin text-zinc-500" />
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
 
     return (
         <div className="grid min-h-screen lg:grid-cols-2">
@@ -316,6 +379,46 @@ export default function RegisterPage() {
                                     {errors.email && (
                                         <p className="text-xs text-red-500 mt-1">{errors.email}</p>
                                     )}
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="company" className="text-sm font-medium text-zinc-700">
+                                            Company (Optional)
+                                        </Label>
+                                        <div className="relative">
+                                            <Building className="absolute left-3 top-3 size-4 text-zinc-500" />
+                                            <Input
+                                                id="company"
+                                                placeholder="Company name"
+                                                type="text"
+                                                name="company"
+                                                value={formData.company}
+                                                onChange={handleChange}
+                                                className="pl-10 h-12 border-zinc-200 focus:border-zinc-400 focus:ring-zinc-400"
+                                                disabled={isLoading}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="jobTitle" className="text-sm font-medium text-zinc-700">
+                                            Job Title (Optional)
+                                        </Label>
+                                        <div className="relative">
+                                            <Briefcase className="absolute left-3 top-3 size-4 text-zinc-500" />
+                                            <Input
+                                                id="jobTitle"
+                                                placeholder="Your role"
+                                                type="text"
+                                                name="jobTitle"
+                                                value={formData.jobTitle}
+                                                onChange={handleChange}
+                                                className="pl-10 h-12 border-zinc-200 focus:border-zinc-400 focus:ring-zinc-400"
+                                                disabled={isLoading}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="space-y-2">
@@ -461,6 +564,7 @@ export default function RegisterPage() {
                                     variant="outline"
                                     className="h-12 border-zinc-200 hover:bg-zinc-50"
                                     onClick={handleGitHubSignUp}
+                                    disabled={isLoading}
                                 >
                                     <Github className="mr-2 size-4" />
                                     GitHub
@@ -469,6 +573,7 @@ export default function RegisterPage() {
                                     variant="outline"
                                     className="h-12 border-zinc-200 hover:bg-zinc-50"
                                     onClick={handleGoogleSignUp}
+                                    disabled={isLoading}
                                 >
                                     <Chrome className="mr-2 size-4" />
                                     Google
